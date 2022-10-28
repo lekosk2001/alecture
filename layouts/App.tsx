@@ -11,7 +11,8 @@ const SignUp = loadable(()=>import('@pages/SignUp'))
 export default function App() {
     return (
         <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/"/>
+            <Route path="Login" element={<Login />} />
             <Route path="SignUp" element={<SignUp />} />
         </Routes>
     )
