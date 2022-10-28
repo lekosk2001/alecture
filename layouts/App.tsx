@@ -1,8 +1,18 @@
+import loadable from '@loadable/component';
 import React from 'react';
-import { Routes } from "react-router-dom";
-import Login from '../pages/Login'
-import SignUp from '../pages/SignUp'
+import {
+    Routes,
+    Route, 
+} from 'react-router-dom';
+
+const Login = loadable(()=>import('@pages/Login')) 
+const SignUp = loadable(()=>import('@pages/SignUp')) 
 
 export default function App() {
-    return <div>초기 세팅입니다.</div>
+    return (
+        <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="SignUp" element={<SignUp />} />
+        </Routes>
+    )
 }
