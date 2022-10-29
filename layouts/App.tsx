@@ -8,7 +8,7 @@ const SignUp = loadable(()=>import('@pages/SignUp'))
 export default function App() {
     return (
         <Routes>
-            <Route path="/" element="/login"/>
+            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
         </Routes>

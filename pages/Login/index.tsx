@@ -4,26 +4,34 @@ import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-// import { Redirect } from 'react-router-dom';
 // import useSWR from 'swr';
 
 const LogIn = () => {
-    const onSubmit = ()=>{console.log("서브밋")}
 
     const [email, onChangeEmail] = useInput('') // 커스텀 훅 (셋 함수는 사용하지 않아서 삭제.)
-    const [nickname, onChangeNickname] = useInput('')
     const [password, ,setPassword] = useInput('') // 커스텀 훅 (온체인지 함수는 사용하지 않아서 비워둠.)
-    const [passwordCheck, ,setPasswordCheck] = useInput('')
-
-    const [logInError,setLogInError] = useInput('')
-    const [mismatchError,setMismatchError] = useState(false) // 미스매치가 참이면 에러.
-
+    const [logInError, ,setLogInError] = useInput('')
 
     const onChangePassword = useCallback((e: { target: { value: React.SetStateAction<string> } })=>{
         setPassword(e.target.value)
-        setMismatchError( e.target.value !== passwordCheck ) // 비밀번호와 비밀번호 체크가 동일하면 트루.
-    },[passwordCheck]) // 패스워드체크가 변동시에만 유즈콜백이 실행.
+    },[])
 
+    const onSubmit = useCallback((e: { preventDefault: () => void })=>{
+        e.preventDefault();
+        setLogInError("")
+        axios.post('http://localhost:3095/api/users/login', {  // 액시오스로 서버에 포스트 요청, 이렇게 보내면 포트가 다른데, 포트가 달라도 같게 웹팩에서 프록시를 통해 설정됨. -> 작동안해서 포트 직접 입력했음.
+            email,
+            password
+        })
+        .then((response)=>{  // 성공시
+            console.log(response)
+        })
+        .catch((error)=>{  // 실패시
+            setLogInError(error.response?.data?.starusCode);
+            console.log(error.response)
+        })
+        .finally(()=>{}) // 성공하든 실패하든
+    },[email,password])
 
     return (
         <div id="container">
