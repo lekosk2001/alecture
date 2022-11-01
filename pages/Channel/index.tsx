@@ -1,4 +1,5 @@
 import Workspace from '@layouts/Workspace/Workspace'
+import {Header} from '@pages/Channel/styles'
 import React from 'react'
 
 type Props = {}
@@ -6,7 +7,7 @@ type Props = {}
 export default function Channel({}: Props) {
     return (
         <Workspace>
-            <div>로그인 완료</div>
+            <Header>로그인 완료</Header>
         </Workspace>
     )
 }
