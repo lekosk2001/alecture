@@ -1,14 +1,16 @@
-import useInput from '@hooks/useInput';
+import useInput from '@hooks/useInput'; // 커스텀 훅
 import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/SignUp/styles';
-import fetcher from '@utils/fetcher';
+import React, { useCallback } from 'react';
+import { Link, Navigate } from 'react-router-dom';
+
 import axios from 'axios';
-import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+
 import useSWR from 'swr'; // 데이터 관리
+import fetcher from '@utils/fetcher';
 
 const LogIn = () => {
 
-    const {data,error} = useSWR('http://localhost:3095/api/users', fetcher) // 백엔드측에서 정해준 데이터를 전해줄 api를 swr를 통해서 저장. 내 로그인 정보를 가져옴/비로그인시 false.
+    const {data,error,mutate} = useSWR('http://localhost:3095/api/users', fetcher) // 백엔드측에서 정해준 데이터를 전해줄 api를 swr를 통해서 저장. 내 로그인 정보를 가져옴/비로그인시 false.
     // swr 주소는 fetcher에게 정보를 정해주고 저 fetcher 함수는 useswr을 어떻게 처리하는지 정해줌. fetcher는 구현해야함. / useswr 대신 리액트 쿼리 사용가능.
 
     const [email, onChangeEmail] = useInput('') // 커스텀 훅 (셋 함수는 사용하지 않아서 삭제.)
@@ -27,7 +29,7 @@ const LogIn = () => {
             password
         })
         .then((response)=>{  // 성공시
-            console.log(response)
+            mutate();
         })
         .catch((error)=>{  // 실패시
             setLogInError(error.response?.data?.starusCode);
@@ -35,6 +37,14 @@ const LogIn = () => {
         })
         .finally(()=>{}) // 성공하든 실패하든
     },[email,password])
+
+    if (data === undefined){
+        return <div>로딩중...</div>
+    }
+
+    if(data){
+        return <Navigate replace to='/workspace/channel'></Navigate>
+    }
 
     return (
         <div id="container">
