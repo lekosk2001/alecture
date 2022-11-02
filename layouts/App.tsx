@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import loadable from '@loadable/component';
+import Workspace from './Workspace/Workspace';
 
 const Login = loadable(()=>import('@pages/Login')) 
 const SignUp = loadable(()=>import('@pages/SignUp')) 
@@ -13,8 +14,7 @@ export default function App() {
             <Route path="/" element={<Navigate replace to='/login' /> } />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/workspace/channel" element={<Channel />} />
-            <Route path="/workspace/dm" element={<DirectMessage />} />
+            <Route path="/workspace/:workspace" element={<Workspace />} />
         </Routes>
     )
 }

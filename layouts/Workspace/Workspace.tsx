@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import useSWR from 'swr'; // 데이터 관리
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, Routes, Route, useParams } from 'react-router-dom';
 import gravatar from 'gravatar';
 import { 
     Header,
@@ -21,12 +21,14 @@ import {
     Chats,
 } from "@layouts/Workspace/styles"
 import Menu from '@components/Menu';
-import { IUser } from '@typings/db';
+import { IChannel, IUser } from '@typings/db';
 import { Button, Input, Label } from '@pages/SignUp/styles';
 import useInput from '@hooks/useInput';
 import Modal from '@components/Modal';
 import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/CreateChannelModal';
+import Channel from '@pages/Channel';
+import DirectMessage from '@pages/DirectMessage';
 
 export default function Workspace ({children}:any){
 
@@ -37,10 +39,14 @@ export default function Workspace ({children}:any){
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
 
+
+    const {workspace,channel}=useParams<{workspace:string,channel:string}>();
+
     const {data:userData, error,mutate} = useSWR<IUser|false>('http://localhost:3095/api/users', fetcher) // 백엔드측에서 정해준 데이터를 전해줄 api를 swr를 통해서 저장. 내 로그인 정보를 가져옴/비로그인시 false.
     // swr 주소는 fetcher에게 정보를 정해주고 저 fetcher 함수는 useswr을 어떻게 처리하는지 정해줌. fetcher는 구현해야함. / useswr 대신 리액트 쿼리 사용가능.
     // : 를 사용하여 구조분해할당 개명가능.
-
+    
+    const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);  //SWR이 조건부 요청이 가능.
     const onLogout = useCallback( () => { // 로그아웃 요청.
         axios
             .post('http://localhost:3095/api/users/logout', {
@@ -166,10 +172,16 @@ export default function Workspace ({children}:any){
                                 <button onClick={onLogout}>로그아웃</button>
                             </WorkspaceModal>
                         </Menu>
+                        {channelData?.map((v)=>(<div>{v.name}</div>))}
                     </MenuScroll>
                 </Channels>
 
-                <Chats>{children}</Chats>
+                <Chats>
+                    <Routes>
+                        <Route path="/workspace/:workspace/channel/:channel" element={<Channel />} />
+                        <Route path="/workspace/:workspace/dm/:id" element={<DirectMessage />} />
+                    </Routes>
+                </Chats>
             </WorkspaceWrapper>
             
             <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseCreateWorkspace}>
@@ -188,8 +200,9 @@ export default function Workspace ({children}:any){
 
             <CreateChannelModal
                 show={showCreateChannelModal}
-                onCloseModal={onCloseModal}>
-            </CreateChannelModal>
+                onCloseModal={onCloseModal}
+                setShowCreateChannelModal={setShowCreateChannelModal}
+            />
         </div>
     )
 }

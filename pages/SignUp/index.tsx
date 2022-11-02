@@ -2,9 +2,13 @@ import React, {useCallback, useState} from "react"
 import { Header, Form, Label, Input, Success, Button, Error, LinkContainer } from "@pages/SignUp/styles"
 import useInput from "@hooks/useInput"
 import axios from "axios"
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
+import useSWR from "swr"
+import fetcher from "@utils/fetcher"
 
 export default function SignUp() {
+    
+    const { data: userData } = useSWR('/api/users', fetcher);
 
     const [email, onChangeEmail] = useInput('') // 커스텀 훅 (셋 함수는 사용하지 않아서 삭제.)
     const [nickname, onChangeNickname] = useInput('')
@@ -48,7 +52,9 @@ export default function SignUp() {
         }
     },[email,nickname,password,passwordCheck])
 
-return <div id="container">
+    if(userData) return <Navigate replace to='/workspace/sleact/channel/일반'></Navigate>
+
+    return <div id="container">
         <Header>Sleact</Header>
 
         <Form onSubmit={onSubmit}>
