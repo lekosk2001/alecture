@@ -3,19 +3,25 @@ import { CloseModalButton, CreateMenu } from './styles'
 
 interface Props {
     show: boolean;
-    onCloseModal: () => void;
+    onCloseModal: (e: any) => void;
     style: CSSProperties;
     closeButton?: boolean;
 }
 
 const Menu: FC<PropsWithChildren<Props>> = ({ closeButton, style, show, children, onCloseModal }) => {
 
-    const stopPropagation = useCallback( // 자식 태그를 클릭했을때에는 부모태그의 온클릭 기능을 막기위함.
-    (e: { stopPropagation: () => void; }) => { e.stopPropagation(); }, [] )
+    const stopPropagation = useCallback((e: { stopPropagation: () => void; }) => {
+        e.stopPropagation(); 
+    }, [] )
     
+
+    if (!show) {
+        return null;
+    }
+
     return (
         <CreateMenu onClick={onCloseModal}>
-            <div style={style} onClick={stopPropagation}>
+            <div onClick={stopPropagation} style={style} >
                 {closeButton &&<CloseModalButton onClick={onCloseModal}>&times;</CloseModalButton>}
                 {children}
             </div>

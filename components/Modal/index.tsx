@@ -3,7 +3,7 @@ import React, { FC, PropsWithChildren, useCallback } from 'react';
 
 interface Props {
     show: boolean;
-    onCloseModal: () => void;
+    onCloseModal: (e:any) => void;
 }
 
 const Modal: FC<PropsWithChildren<Props>> = ({ show, children, onCloseModal }) => {
@@ -14,7 +14,7 @@ const stopPropagation = useCallback((e: { stopPropagation: () => void; }) => {
     if (!show) {
         return null;
     }
-    
+
     return (
         <CreateModal onClick={onCloseModal}>
         <div onClick={stopPropagation}>
