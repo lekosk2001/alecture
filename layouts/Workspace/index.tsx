@@ -30,6 +30,8 @@ import CreateChannelModal from '@components/CreateChannelModal';
 import loadable from '@loadable/component';
 import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
+import DMList from '@components/DMList';
+import ChannelList from '@components/ChannelList';
 
 const Workspace = () => {
     const [showUserMenu,setShowUserMenu]=useState(false);
@@ -125,7 +127,7 @@ const Workspace = () => {
     },[])
 
     const onClickInviteWorkspace = useCallback(()=>{
-        setShowInviteWorkspaceModal((prev)=>!prev)
+        setShowInviteWorkspaceModal(true)
     },[])
 
     if(userData === false){ // 유저데이터가 없으면 로그인페이지로 리다이렉트.
@@ -173,11 +175,14 @@ const Workspace = () => {
                         <Menu style={{top:95, left:80}} show={showWorkspaceModal} onCloseModal={onCloseModal}>
                             <WorkspaceModal>
                                 <h2>Sleact</h2>
+                                <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button>
                                 <button onClick={onClickAddChannel}>채널 만들기</button>
                                 <button onClick={onLogout}>로그아웃</button>
                             </WorkspaceModal>
                         </Menu>
-                        {channelData?.map((v,i)=>(<div key={i}>{v.name}</div>))}
+                        <DMList/>
+                        <ChannelList/>
+                        {/* {channelData?.map((v,i)=>(<div key={i}>{v.name}</div>))} */}
                     </MenuScroll>
                 </Channels>
 
