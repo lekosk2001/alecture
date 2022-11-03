@@ -14,7 +14,7 @@ export default function App() {
             <Route path="/" element={<Navigate replace to='/login' /> } />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/workspace/:workspace" element={<Workspace />} />
+            <Route path="/workspace/:workspace/*" element={<Workspace />} />
             {/* <Route path="/workspace/:workspace/channel/:channel" element={<Channel />} />
             <Route path="/workspace/:workspace/dm/:id" element={<DirectMessage />} /> */}
         </Routes>

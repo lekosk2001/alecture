@@ -28,12 +28,15 @@ import Modal from '@components/Modal';
 import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/CreateChannelModal';
 import loadable from '@loadable/component';
+import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
+import InviteChannelModal from '@components/InviteChannelModal';
 
 const Workspace = () => {
-
     const [showUserMenu,setShowUserMenu]=useState(false);
     const [showCreateWorkspaceModal,setShowCreateWorkspaceModal]=useState(false);
     const [showCreateChannelModal,setShowCreateChannelModal]=useState(false);
+    const [showInviteWorkspaceModal,setShowInviteWorkspaceModal]=useState(false);
+    const [showInviteChannelModal,setShowInviteChannelModal]=useState(false);
     const [showWorkspaceModal,setShowWorkspaceModal]=useState(false);
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
@@ -64,11 +67,6 @@ const Workspace = () => {
     
 
     // 유저 프로필
-    const onCloseUserProfile = useCallback((e:any)=>{ // 유저프로필 닫기 기능.
-        e.stopPropagation();
-        setShowUserMenu((prev)=>!prev)
-    },[])
-
     const onClickUserProfile = useCallback(()=>{ //유저프로필 토글.
         setShowUserMenu((prev)=>!prev)
     },[])
@@ -105,11 +103,6 @@ const Workspace = () => {
         [newWorkspace, newUrl],
     );
 
-    const onCloseCreateWorkspace= useCallback((e:any)=>{
-        e.stopPropagation();
-        setShowCreateWorkspaceModal(false)
-    },[])
-
     const toggleWorkspaceModal = useCallback((e:any)=>{
         setShowWorkspaceModal((prev)=>!prev)
     },[])
@@ -122,7 +115,16 @@ const Workspace = () => {
     
     const onCloseModal= useCallback((e:any)=>{
         e.stopPropagation();
+        setShowUserMenu(false)
+        setShowWorkspaceModal(false)
+        setShowCreateWorkspaceModal(false)
         setShowCreateChannelModal(false)
+        setShowInviteWorkspaceModal(false)
+        setShowInviteChannelModal(false)
+    },[])
+
+    const onClickInviteWorkspace = useCallback(()=>{
+        setShowInviteWorkspaceModal((prev)=>!prev)
     },[])
 
     if(userData === false){ // 유저데이터가 없으면 로그인페이지로 리다이렉트.
@@ -137,7 +139,7 @@ const Workspace = () => {
                         <ProfileImg src={userData?gravatar.url(userData.email,{s:'28px',d:'retro'}):undefined} alt={userData?.nickname}></ProfileImg>
                         {showUserMenu && (
 
-                            <Menu style={{right:0,top:38}} show={showUserMenu} onCloseModal={onCloseUserProfile}>
+                            <Menu style={{right:0,top:38}} show={showUserMenu} onCloseModal={onCloseModal}>
                                 <ProfileModal>
                                     <img src={userData?gravatar.url(userData.email, { s: '36px', d: 'retro' }):undefined} alt={userData?.nickname} />
                                     <div>
@@ -167,7 +169,7 @@ const Workspace = () => {
                 <Channels>
                     <WorkspaceName onClick={toggleWorkspaceModal}>Sleact</WorkspaceName>
                     <MenuScroll>
-                        <Menu style={{top:95, left:80}} show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal}>
+                        <Menu style={{top:95, left:80}} show={showWorkspaceModal} onCloseModal={onCloseModal}>
                             <WorkspaceModal>
                                 <h2>Sleact</h2>
                                 <button onClick={onClickAddChannel}>채널 만들기</button>
@@ -180,13 +182,13 @@ const Workspace = () => {
 
                 <Chats>
                     <Routes>
-                        <Route path="/workspace/:workspace/channel/:channel" element={<Channel />} />
-                        <Route path="/workspace/:workspace/dm/:id" element={<DirectMessage />} />
+                        <Route path="/channel/:channel" element={<Channel />} />
+                        <Route path="/dm/:id" element={<DirectMessage />} />
                     </Routes>
                 </Chats>
             </WorkspaceWrapper>
             
-            <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseCreateWorkspace}>
+            <Modal show={showCreateWorkspaceModal} onCloseModal={onCloseModal}>
                 <form onSubmit={onCreateWorkspace}>
                     <Label id="workspace-label">
                         <span>워크스페이스 이름</span>
@@ -205,6 +207,19 @@ const Workspace = () => {
                 onCloseModal={onCloseModal}
                 setShowCreateChannelModal={setShowCreateChannelModal}
             />
+
+            <InviteWorkspaceModal
+                show={showInviteWorkspaceModal}
+                onCloseModal={onCloseModal}
+                setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
+            />
+
+            <InviteChannelModal
+                show={showInviteChannelModal}
+                onCloseModal={onCloseModal}
+                setShowInviteChannelModal={setShowInviteChannelModal}
+            />
+
         </div>
     )
 }

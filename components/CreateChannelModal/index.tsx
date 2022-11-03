@@ -31,7 +31,7 @@ const CreateChannelModal: FC<PropsWithChildren<Props>> = ({ show, onCloseModal,s
         },{
             withCredentials:true
         }).then(()=>{
-            mutateChannel();
+            mutateChannel()
             setShowCreateChannelModal(false);
             setNewChannel('');
 
