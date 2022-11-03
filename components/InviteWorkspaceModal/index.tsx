@@ -17,13 +17,13 @@ interface Props {
 
 const InviteWorkspaceModal: FC<PropsWithChildren<Props>> = ({ show, onCloseModal,setShowInviteWorkspaceModal }) => {
     
-    const { data:userData } = useSWR<IUser>(`http://localhost:3095//api/user`,fetcher);
+    const { data:userData } = useSWR<IUser>(`/api/users`,fetcher);
 
     const [newMember, onChangeNewMember, setNewMember] = useInput('');
     const {workspace,channel}=useParams<{workspace:string,channel:string}>();
 
     const { mutate:mutateMembers } = useSWR<IChannel[]>(
-        userData ? `http://localhost:3095/api/${workspace}/members`:null,fetcher);
+        userData ? `/api/${workspace}/members`:null,fetcher);
 
     // 인바이트 멤버
     const onInviteMember = useCallback((e: { preventDefault: () => void; })=>{
@@ -31,7 +31,7 @@ const InviteWorkspaceModal: FC<PropsWithChildren<Props>> = ({ show, onCloseModal
         e.preventDefault();
         if (!newMember||!newMember.trim()){return} // 인풋창 검사.
 
-        axios.post(`http://localhost:3095/api/Workspaces/${workspace}/members`,{
+        axios.post(`/api/Workspaces/${workspace}/members`,{
             email:newMember,
         },{
             withCredentials:true

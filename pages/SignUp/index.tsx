@@ -35,7 +35,7 @@ export default function SignUp() {
         if(!mismatchError){ //비밀번호 매치에러가 아닐시 서밋 진행.
             console.log('서버로 회원가입하기');
             setSignUpError('');
-            axios.post('http://localhost:3095/api/users',{  // 액시오스로 서버에 포스트 요청.
+            axios.post('/api/users',{  // 액시오스로 서버에 포스트 요청.
                 email,
                 nickname,
                 password

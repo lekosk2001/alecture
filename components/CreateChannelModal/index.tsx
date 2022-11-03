@@ -20,13 +20,13 @@ const CreateChannelModal: FC<PropsWithChildren<Props>> = ({ show, onCloseModal,s
     const [newChannel, onChangeNewChannel, setNewChannel] = useInput('');
     const {workspace,channel}=useParams<{workspace:string,channel:string}>();
 
-    const { data: userData } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher);
-    const { data: channelData, mutate:mutateChannel} = useSWR<IChannel[]>(userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null, fetcher);  //SWR이 조건부 요청이 가능.
+    const { data: userData } = useSWR<IUser | false>('/api/users', fetcher);
+    const { data: channelData, mutate:mutateChannel} = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);  //SWR이 조건부 요청이 가능.
 
     // 크리에이트채널
     const onCreateChannel = useCallback((e: { preventDefault: () => void; })=>{
         e.preventDefault();
-        axios.post(`http://localhost:3095/api/workspaces/${workspace}/channels`,{
+        axios.post(`/api/workspaces/${workspace}/channels`,{
             name:newChannel,
         },{
             withCredentials:true

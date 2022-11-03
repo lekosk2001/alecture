@@ -10,7 +10,7 @@ import fetcher from '@utils/fetcher';
 
 const LogIn = () => {
 
-    const {data,error,mutate} = useSWR('http://localhost:3095/api/users', fetcher) // 백엔드측에서 정해준 데이터를 전해줄 api를 swr를 통해서 저장. 내 로그인 정보를 가져옴/비로그인시 false.
+    const {data,error,mutate} = useSWR('/api/users', fetcher) // 백엔드측에서 정해준 데이터를 전해줄 api를 swr를 통해서 저장. 내 로그인 정보를 가져옴/비로그인시 false.
     // swr 주소는 fetcher에게 정보를 정해주고 저 fetcher 함수는 useswr을 어떻게 처리하는지 정해줌. fetcher는 구현해야함. / useswr 대신 리액트 쿼리 사용가능.
 
     const [email, onChangeEmail] = useInput('') // 커스텀 훅 (셋 함수는 사용하지 않아서 삭제.)
@@ -24,7 +24,7 @@ const LogIn = () => {
     const onSubmit = useCallback((e: { preventDefault: () => void })=>{
         e.preventDefault();
         setLogInError("")
-        axios.post('http://localhost:3095/api/users/login', {  // 액시오스로 서버에 포스트 요청, 이렇게 보내면 포트가 다른데, 포트가 달라도 같게 웹팩에서 프록시를 통해 설정됨. -> 작동안해서 포트 직접 입력했음.
+        axios.post('/api/users/login', {  // 액시오스로 서버에 포스트 요청, 이렇게 보내면 포트가 다른데, 포트가 달라도 같게 웹팩에서 프록시를 통해 설정됨. -> 작동안해서 포트 직접 입력했음.
             email,
             password
         })
