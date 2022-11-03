@@ -27,10 +27,9 @@ import useInput from '@hooks/useInput';
 import Modal from '@components/Modal';
 import { toast } from 'react-toastify';
 import CreateChannelModal from '@components/CreateChannelModal';
-import Channel from '@pages/Channel';
-import DirectMessage from '@pages/DirectMessage';
+import loadable from '@loadable/component';
 
-export default function Workspace ({children}:any){
+const Workspace = () => {
 
     const [showUserMenu,setShowUserMenu]=useState(false);
     const [showCreateWorkspaceModal,setShowCreateWorkspaceModal]=useState(false);
@@ -39,6 +38,8 @@ export default function Workspace ({children}:any){
     const [newWorkspace, onChangeNewWorkspace, setNewWorkspace] = useInput('');
     const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
 
+    const Channel = loadable(()=>import('@pages/Channel')) 
+    const DirectMessage = loadable(()=>import('@pages/DirectMessage')) 
 
     const {workspace,channel}=useParams<{workspace:string,channel:string}>();
 
@@ -46,7 +47,8 @@ export default function Workspace ({children}:any){
     // swr 주소는 fetcher에게 정보를 정해주고 저 fetcher 함수는 useswr을 어떻게 처리하는지 정해줌. fetcher는 구현해야함. / useswr 대신 리액트 쿼리 사용가능.
     // : 를 사용하여 구조분해할당 개명가능.
     
-    const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);  //SWR이 조건부 요청이 가능.
+    const { data: channelData } = useSWR<IChannel[]>(userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null, fetcher);  //SWR이 조건부 요청이 가능.
+    
     const onLogout = useCallback( () => { // 로그아웃 요청.
         axios
             .post('http://localhost:3095/api/users/logout', {
@@ -172,7 +174,7 @@ export default function Workspace ({children}:any){
                                 <button onClick={onLogout}>로그아웃</button>
                             </WorkspaceModal>
                         </Menu>
-                        {channelData?.map((v)=>(<div>{v.name}</div>))}
+                        {channelData?.map((v,i)=>(<div key={i}>{v.name}</div>))}
                     </MenuScroll>
                 </Channels>
 
@@ -207,3 +209,4 @@ export default function Workspace ({children}:any){
     )
 }
 
+export default Workspace
