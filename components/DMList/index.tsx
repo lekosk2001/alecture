@@ -71,8 +71,11 @@ const DMList:FC = () => {
 							key={member.id}
 							// isActive={true}
 							to={`/workspace/${workspace}/dm/${member.id}`}
-							onClick={resetCount}
+							// onClick={resetCount(member.id)}
 						>
+							<i></i>
+							<span className={count>0?'bold':undefined}>{member.nickname}</span>
+							{member.id===userData?.id&&<span>(나)</span>}
 						</NavLink>
 						// <EachDM key={member.id} member={member} isOnline={isOnline} />;
 						)})}

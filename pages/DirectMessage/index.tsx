@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { Container,Header } from './styles'
 import gravatar from 'gravatar';
 import { useParams } from 'react-router-dom';
-import ChatList from '@components/ChatList';
+// import ChatList from '@components/ChatList';
 // import ChatBox from '@components/ChatBox';
 
 const DirectMessage = () => {
