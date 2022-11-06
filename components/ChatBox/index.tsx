@@ -1,6 +1,6 @@
 import { ChatArea, Form, MentionsTextarea, SendButton, Toolbox } from "@components/ChatBox/styles";
 import autosize from "autosize";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 interface Props{
     chat:string;
@@ -18,6 +18,17 @@ const ChatBox = ({chat, onSubmitForm, onChangeChat,placeholder}:Props)=> {
         }
     }, [])
 
+    // 엔터 시 서브잇, 쉬프트 엔터시 줄바꿈.
+    const onKeydownChat = useCallback((e:any) => {
+        if(e.key === 'Enter'){ // 엔터시
+            if(!e.shiftKey){ // 쉬프트 엔터 아닐 시
+                e.preventDefault();
+                onSubmitForm(e)
+            }
+        }
+    },[onSubmitForm])
+    
+
     return(
         <ChatArea>
             <Form onSubmit={onSubmitForm}>
@@ -27,6 +38,7 @@ const ChatBox = ({chat, onSubmitForm, onChangeChat,placeholder}:Props)=> {
                     onChange={onChangeChat} 
                     placeholder={placeholder}
                     ref={textareaRef}
+                    onKeyDown={onKeydownChat}
                 > </MentionsTextarea>
                 <Toolbox>
                     <SendButton
