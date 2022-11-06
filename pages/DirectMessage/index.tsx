@@ -6,12 +6,12 @@ import { Container,Header } from './styles'
 import gravatar from 'gravatar';
 import { useParams } from 'react-router-dom';
 // import ChatList from '@components/ChatList';
-// import ChatBox from '@components/ChatBox';
+import ChatBox from '@components/ChatBox';
 
 const DirectMessage = () => {
     
     const { workspace, id } = useParams<{ workspace?: string, id:string }>();
-    const { data: userData } = useSWR<IUser>(`/api/workspaces/${workspace}/members/${id}`, fetcher);
+    const { data: userData } = useSWR<IUser>(`/api/workspaces/${workspace}/users/${id}`, fetcher);
     const { data: myData } = useSWR<IUser>(`/api/users`, fetcher);
 
     if(!userData || !myData ){return null};
@@ -25,7 +25,7 @@ const DirectMessage = () => {
                 </span>
             </Header>
             {/* <ChatList/> */}
-            {/* <ChatBox/> */}
+            <ChatBox chat={''}/>
         </Container>
     )
 }

@@ -180,8 +180,8 @@ const Workspace = () => {
                                 <button onClick={onLogout}>로그아웃</button>
                             </WorkspaceModal>
                         </Menu>
-                        <DMList/>
                         <ChannelList/>
+                        <DMList/>
                         {/* {channelData?.map((v,i)=>(<div key={i}>{v.name}</div>))} */}
                     </MenuScroll>
                 </Channels>

@@ -64,20 +64,28 @@ const DMList:FC = () => {
 				{!channelCollapse &&
 					memberData?.map((member) => {
 						const isOnline = onlineList.includes(member.id);
-						const count = countList[member.id]||0;
+						const count = countList[member.id] || 0;
 						return (
 
 						<NavLink
 							key={member.id}
-							// isActive={true}
+							className={ ({ isActive }) =>  isActive? "selected" : ""  } // 액티브시 클래스네임 변경
 							to={`/workspace/${workspace}/dm/${member.id}`}
 							// onClick={resetCount(member.id)}
 						>
-							<i></i>
-							<span className={count>0?'bold':undefined}>{member.nickname}</span>
+							<i
+								className={`c-icon p-channel_sidebar__presence_icon p-channel_sidebar__presence_icon--dim_enabled c-presence ${
+								isOnline ? 'c-presence--active c-icon--presence-online' : 'c-icon--presence-offline'
+								}`}
+								aria-hidden="true"
+								data-qa="presence_indicator"
+								data-qa-presence-self="false"
+								data-qa-presence-active="false"
+								data-qa-presence-dnd="false"
+							/>
+							<span className={ count>0 ?'bold':undefined}>{member.nickname}</span>
 							{member.id===userData?.id&&<span>(나)</span>}
 						</NavLink>
-						// <EachDM key={member.id} member={member} isOnline={isOnline} />;
 						)})}
 			</div>
 		</>
