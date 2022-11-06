@@ -1,23 +1,33 @@
 import { ChatArea, Form, MentionsTextarea, SendButton, Toolbox } from "@components/ChatBox/styles";
-import React, { useCallback } from "react";
+import autosize from "autosize";
+import React, { useEffect, useRef } from "react";
 
 interface Props{
     chat:string;
+    onSubmitForm:(e:any)=>void;
+    onChangeChat:(e:any)=>void;
+    placeholder?:string;
 }
 
-const ChatBox = ({chat}:Props)=> {
-    const onSubmitForm = useCallback(
-        () => {
-            
-        },[],
-    )
+const ChatBox = ({chat, onSubmitForm, onChangeChat,placeholder}:Props)=> {
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    
+    useEffect(() => {
+        if(textareaRef.current){ // 오토사이즈 라이브러리 적용.
+            autosize(textareaRef.current)
+        }
+    }, [])
 
     return(
         <ChatArea>
             <Form onSubmit={onSubmitForm}>
-                <MentionsTextarea>
-                    <textarea></textarea>
-                </MentionsTextarea>
+                <MentionsTextarea 
+                    id="edito-chat" 
+                    value={chat} 
+                    onChange={onChangeChat} 
+                    placeholder={placeholder}
+                    ref={textareaRef}
+                > </MentionsTextarea>
                 <Toolbox>
                     <SendButton
                         className={
