@@ -10,50 +10,61 @@ import { toast } from 'react-toastify';
 import useSWR from 'swr';
 
 interface Props {
-    show: boolean;
-    onCloseModal: any;
-    setShowCreateChannelModal: (flag:boolean)=>void;
+  show: boolean;
+  onCloseModal: any;
+  setShowCreateChannelModal: (flag: boolean) => void;
 }
 
-const CreateChannelModal: FC<PropsWithChildren<Props>> = ({ show, onCloseModal,setShowCreateChannelModal }) => {
+const CreateChannelModal: FC<PropsWithChildren<Props>> = ({ show, onCloseModal, setShowCreateChannelModal }) => {
+  const [newChannel, onChangeNewChannel, setNewChannel] = useInput('');
+  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
 
-    const [newChannel, onChangeNewChannel, setNewChannel] = useInput('');
-    const {workspace,channel}=useParams<{workspace:string,channel:string}>();
+  const { data: userData } = useSWR<IUser | false>('/api/users', fetcher);
+  const { data: channelData, mutate: mutateChannel } = useSWR<IChannel[]>(
+    userData ? `/api/workspaces/${workspace}/channels` : null,
+    fetcher,
+  ); //SWR이 조건부 요청이 가능.
 
-    const { data: userData } = useSWR<IUser | false>('/api/users', fetcher);
-    const { data: channelData, mutate:mutateChannel} = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);  //SWR이 조건부 요청이 가능.
-
-    // 크리에이트채널
-    const onCreateChannel = useCallback((e: { preventDefault: () => void; })=>{
-        e.preventDefault();
-        axios.post(`/api/workspaces/${workspace}/channels`,{
-            name:newChannel,
-        },{
-            withCredentials:true
-        }).then(()=>{
-            mutateChannel()
-            setShowCreateChannelModal(false);
-            setNewChannel('');
-
-        }).catch((error)=>{
-            console.dir(error);
-            toast.error(error.response?.data,{position:'bottom-center'});
+  // 크리에이트채널
+  const onCreateChannel = useCallback(
+    (e: { preventDefault: () => void }) => {
+      e.preventDefault();
+      axios
+        .post(
+          `/api/workspaces/${workspace}/channels`,
+          {
+            name: newChannel,
+          },
+          {
+            withCredentials: true,
+          },
+        )
+        .then(() => {
+          mutateChannel();
+          setShowCreateChannelModal(false);
+          setNewChannel('');
         })
-    },[newChannel, mutateChannel, setNewChannel, setShowCreateChannelModal, workspace])
+        .catch((error) => {
+          console.dir(error);
+          toast.error(error.response?.data, { position: 'bottom-center' });
+        });
+    },
+    [newChannel, mutateChannel, setNewChannel, setShowCreateChannelModal, workspace],
+  );
 
-    if(!show) return null;
+  if (!show) return null;
 
-    return (
-        <Modal show={show} onCloseModal={onCloseModal}>
-            <form onSubmit={onCreateChannel}>
-                <Label id="Channele-label">
-                    <span>채널</span>
-                    <Input id="Channel" value={newChannel} onChange={onChangeNewChannel} />
-                </Label>
-                <Button type="submit">생성하기</Button>
-            </form>
-        </Modal>
-    );
+  return (
+    <Modal show={show} onCloseModal={onCloseModal}>
+      <form onSubmit={onCreateChannel}>
+        <Label id="Channele-label">
+          <span>채널</span>
+          <Input id="Channel" value={newChannel} onChange={onChangeNewChannel} />
+        </Label>
+        <Button type="submit">생성하기</Button>
+      </form>
+    </Modal>
+  );
 };
 
 export default CreateChannelModal;

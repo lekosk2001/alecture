@@ -11,7 +11,7 @@ interface Props {
   chatSections: { [key: string]: (IDM | IChat)[] };
   setSize: (f: (size: number) => number) => Promise<(IDM | IChat)[][] | undefined>;
 }
-const ChatList: FC<Props> = ({  isReachingEnd, isEmpty, chatSections, setSize }) => {
+const ChatList: FC<Props> = ({ isReachingEnd, isEmpty, chatSections, setSize }) => {
   // const onScroll = useCallback(
   //   (values) => {
   //     if (values.scrollTop === 0 && !isReachingEnd && !isEmpty) {
